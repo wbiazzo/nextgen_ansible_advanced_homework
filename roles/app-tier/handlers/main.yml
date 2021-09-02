@@ -1,2 +1,6 @@
 ---
-# handlers file for roles/flask
+- name: restart {{ payload }}
+  service:
+    name: tomcat
+    state: restarted
+

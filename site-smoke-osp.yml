@@ -1,11 +1,55 @@
-- hosts: workstation
+---
+- name: Smoke test for QA environment including 3-tier app
+  hosts: workstation
   gather_facts: false
   tasks:
-  - name: OpenStack servers
-  - name: Curl website
+  - name: Fetch Instance Info
+    os_server_info:
+      cloud: openstack
+      region_name: regionOne
+      server: front*
+    register: r_os_servers
+
+  - name: Add host
+    add_host:
+      name: "{{ item.public_v4 }}"
+      group:
+        - "{{ item.metadata.group }}"
+        - "{{ item.metadata.deployment_name }}"
+    loop: "{{ r_os_servers.openstack_servers }}"
+
+  - name: Get frontend IP
+    set_fact:
+      frontendIP: "{{ r_os_servers.openstack_servers[0].accessIPv4 }}"
+
+  - name: Check webserver for correct response
+    uri:
+      url: "http://{{ frontendIP }}/index.html"
+      return_content: yes
+    register: results1
+
+  - name: print content of the page
+    debug:
+      msg: "{{ results1.content }}"
 
   - name: Fail if 'Ansible has done its job' is not in the page content
     fail:
-    when: "'Ansible has done its job' not in webpage.results[0].content"
+    when: "'Ansible has done its job' not in results1.content"
+    tags:
+      - osp.smoke
+
+  - name: Check webserver for correct response
+    uri:
+      url: "http://{{ frontendIP }}/index.html"
+      return_content: yes
+    register: results2
+
+  - name: print content of the page
+    debug:
+      msg: "{{ results2.content }}"
+
+  - name: Fail if 'Ansible has done its job' is not in the page content
+    fail:
+    when: "'Ansible has done its job' not in results2.content"
     tags:
       - osp.smoke

@@ -3,6 +3,6 @@
      cloud: openstack
      state: present
      name: m1.medium
-     ram: 1024
+     ram: 2048
      vcpus: 1
-     disk: 10
+     disk: 20

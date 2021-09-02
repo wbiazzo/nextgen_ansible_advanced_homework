@@ -2,7 +2,7 @@
   command: |
     tower-cli workflow create -n {{workflow_template_name}} --organization {{org_name}}
 
-- name: Create workflow schema 
+- name: Create workflow schema
   template:
     src: workflow.j2
     dest: /root/workflow.yml

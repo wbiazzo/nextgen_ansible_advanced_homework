@@ -1,5 +1,5 @@
 osp_networks:
-  # Public Facing Network   
+  # Public Facing Network
   external:
     cloud_name: openstack
     network_name: ext_network
@@ -17,7 +17,7 @@ osp_networks:
     allocation_pool_end: 192.0.2.200
 
 
-  # Private Facing Network   
+  # Private Facing Network
   internal:
     cloud_name: openstack
     network_name: int_network
